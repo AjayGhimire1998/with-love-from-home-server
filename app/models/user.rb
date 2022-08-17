@@ -1,10 +1,19 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+    has_many :reviews
+    has_many :carts
 
-  # acts_as_token_authenticatable
-
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable,
-         :confirmable
+    has_secure_password 
+    before_save :downcase_email 
+    # before_save :titleize_fullname
+    validates :email, format: {with: URI::MailTo::EMAIL_REGEXP, message: "Invalid"}, presence: true, uniqueness: true
+    
+    private 
+    def downcase_email 
+        self.email = email.downcase
+    end
+    # def titleize_fullname 
+    #     self.fullname = fullname.titleize
+    # end
 end
+
+
