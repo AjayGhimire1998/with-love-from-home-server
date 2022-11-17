@@ -1,5 +1,6 @@
 class Api::V1::ProductReviewsController < ApplicationController
   before_action :set_product_review, only: [:show, :update, :destroy]
+  before_action :user_authorized, only: [:create, :update, :destroy]
 
   # GET /product_reviews
   def index
@@ -26,7 +27,7 @@ class Api::V1::ProductReviewsController < ApplicationController
     if @product_review.save
       render json: @product_review, status: :created
     else
-      render json: @product_review.errors, status: :unprocessable_entity
+      render json: {error: @product_review.errors}
     end
   end
 
@@ -35,7 +36,7 @@ class Api::V1::ProductReviewsController < ApplicationController
     if @product_review.update(product_review_params)
       render json: @product_review
     else
-      render json: @product_review.errors, status: :unprocessable_entity
+      render json: @product_review.errors
     end
   end
 

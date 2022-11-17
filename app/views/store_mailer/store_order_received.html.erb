@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hello <%= @store.name %></h1>
+    <p>
+      You have recieved an order of: 
+      <ul>
+        <% @items.each do |item|  %>    
+            <li><%= Product.find_by(id: item.product_id).name %> X <%= item.amount %></li>
+        <% end %>
+      </ul> 
+    </p>
+    <p>
+      To view more details, please visit: http://localhost:3002/
+    </p>
+    <br>
+    <p>Thanks for the support and have a great day!</p>
+  </body>
+</html>

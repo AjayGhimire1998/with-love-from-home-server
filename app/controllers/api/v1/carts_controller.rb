@@ -1,6 +1,7 @@
 class Api::V1::CartsController < ApplicationController
   before_action :set_cart, only: [:show, :update, :destroy]
   before_action :user_authorized, only: [:create]
+  # before_action :store_authorized, only: [:store_carts]
 
   # GET /carts
   def index
@@ -19,6 +20,23 @@ class Api::V1::CartsController < ApplicationController
     cart_items = []
     carts.each{|cart| cart_items << cart.cart_items}
     render json: {carts: carts, cart_items: cart_items }
+  end
+
+  def user_carts 
+    carts = User.find_by(id: params[:id]).carts
+    cart_items = []
+    carts.each{|cart| cart_items << cart.cart_items}
+    render json: {carts: carts, cart_items: cart_items}
+  end
+
+  def email_cart_to_user_and_store 
+    cart = Cart.find_by(id: params[:id].to_i)
+    if cart
+      store = cart.store
+      items = cart.cart_items
+    end
+    UserMailer.user_order_placed(store, items, cart).deliver_now
+    StoreMailer.store_order_received(store, items, cart).deliver_now
   end
 
   # POST /carts
@@ -54,6 +72,6 @@ class Api::V1::CartsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def cart_params
-      params.require(:cart).permit(:user_id, :store_id, :customer_name, :delivery_address, :phone_number, :recipient_email)
+      params.require(:cart).permit(:user_id, :store_id, :customer_name, :phone_number, :recipient_email, delivery_address: {} )
     end
 end

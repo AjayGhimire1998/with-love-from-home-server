@@ -2,7 +2,6 @@ class Api::V1::ProductsController < ApplicationController
   # before_action :user_authorized, except: [:create]
   before_action :store_authorized, except: [:index, :show, :store_products]
   
-
   before_action :set_product, only: [:show, :update, :destroy]
 
   # GET /products
@@ -55,6 +54,6 @@ class Api::V1::ProductsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def product_params
-      params.require(:product).permit(:name, :price, :store_id, :description, images: [])
+      params.require(:product).permit(:name, :price, :store_id, :description, :available, :in_stock, images: [])
     end
 end

@@ -5,7 +5,7 @@ class Api::V1::StoreSessionsController < ApplicationController
             token = encode_token(store_id: @store.id)
             render json: { store: StoreSerializer.new(@store), accessToken: token }, status: :created
         else
-            render json: { error: "Invalid Credentials" }, status: :not_acceptable
+            render json: { error: "Invalid Credentials" }, status: :unauthorized
         end
     end
 end

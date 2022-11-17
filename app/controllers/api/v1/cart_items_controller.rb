@@ -1,7 +1,7 @@
 class Api::V1::CartItemsController < ApplicationController
   before_action :set_cart_item, only: [:show, :update, :destroy]
   before_action :user_authorized, only: [:create]
-  before_action :store_authorized, only: [:update]
+  before_action :store_authorized, only: [:update, :destroy]
 
   # GET /cart_items
   def index
@@ -15,16 +15,23 @@ class Api::V1::CartItemsController < ApplicationController
     render json: @cart_item
   end
 
-  # def cart_items 
-  #   cart_items = Cart.find_by(id: params[:id]).cart_items
-  #   render json: cart_items
-  # end
+  def email_cart_item_status_to_user
+    item = CartItem.find_by(id: params[:id].to_i)
+    if item 
+      cart = item.cart
+      store = cart.store
+    end
+    UserMailer.user_order_status(store, item, cart).deliver_now
+  end
 
   # POST /cart_items
   def create
     @cart_item = CartItem.new(cart_item_params)
-
-    if @cart_item.save
+    # byebug
+    if @cart_item.product.in_stock >= @cart_item.amount && @cart_item.save
+      @cart_item_product = @cart_item.product
+      @cart_item_product.in_stock = @cart_item_product.in_stock - @cart_item.amount
+      @cart_item_product.save
       render json: @cart_item, status: :created
     else
       render json: @cart_item.errors, status: :unprocessable_entity
@@ -53,6 +60,6 @@ class Api::V1::CartItemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def cart_item_params
-      params.require(:cart_item).permit(:product_id, :cart_id, :amount, :total, :status, :reject_message)
+      params.require(:cart_item).permit(:product_id, :cart_id, :amount, :total, :status, :reject_message, approve_message: {})
     end
 end

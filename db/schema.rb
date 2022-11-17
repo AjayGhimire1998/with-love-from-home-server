@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_17_045732) do
+ActiveRecord::Schema.define(version: 2022_08_25_103656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,17 +52,18 @@ ActiveRecord::Schema.define(version: 2022_08_17_045732) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "reject_message"
+    t.json "approve_message"
   end
 
   create_table "carts", force: :cascade do |t|
     t.integer "user_id"
     t.integer "store_id"
     t.text "customer_name"
-    t.text "delivery_address"
     t.text "phone_number"
     t.text "recipient_email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.json "delivery_address"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -88,6 +89,7 @@ ActiveRecord::Schema.define(version: 2022_08_17_045732) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "images", default: [], array: true
     t.integer "store_id"
+    t.integer "in_stock"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -107,6 +109,8 @@ ActiveRecord::Schema.define(version: 2022_08_17_045732) do
     t.text "email"
     t.text "password_digest"
     t.string "logo"
+    t.text "password_reset_token"
+    t.datetime "password_reset_sent_at"
   end
 
   create_table "users", force: :cascade do |t|
@@ -115,6 +119,8 @@ ActiveRecord::Schema.define(version: 2022_08_17_045732) do
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "password_reset_token"
+    t.datetime "password_reset_sent_at"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

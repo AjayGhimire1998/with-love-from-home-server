@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h4>Hello <%= User.find_by(email: @cart.recipient_email).fullname || @cart.customer_name %></h4>
+    <p>
+      The status of the Order: <%= @item.product.name %> placed with <%= @store.name %> is changed.
+    </p>
+    <br>
+    <% if @item.status === "approved" %>
+      <p>Status: <span><%= @item.status %></span></p>
+      <p>Expected Delivery Date: <span>"<%= @item.approve_message["date"].to_datetime.strftime("%A %d/%m/%Y at %I:%M %p") %>"</span></p>
+      <p>Message from the store: <span>"<%= @item.approve_message["message"] %>"</span></p>
+    <% elsif @item.status === "rejected" %>
+      <p>Status: <span><%= @item.status %></span></p>
+      <p>Message from the store: <span><%= @item.reject_message %></span></p>
+    <% end %>
+    
+    <p>
+      To view more details, please visit: http://localhost:3002/
+    </p>
+    <br>
+    <p>Thanks for the support and have a great day!</p>
+  </body>
+</html>

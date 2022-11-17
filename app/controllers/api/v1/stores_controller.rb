@@ -17,7 +17,7 @@ class Api::V1::StoresController < ApplicationController
   # POST /stores
   def create
     # raise params.inspect
-    @store = Store.create!(store_params)
+    @store = Store.create(store_params)
     # @store.avatar.attach(io: File.open(`#{params[:avatar]}`), filename: 'file.pdf')
       if @store.valid?
           @token = encode_token(store_id: @store.id)
@@ -32,7 +32,7 @@ class Api::V1::StoresController < ApplicationController
     if @store.update(store_params)
       render json: {store: {current_store: @store, category_name: @category_name}}
     else
-      render json: @store.errors, status: :unprocessable_entity
+      render json: {error: @store.errors.full_messages}, status: :unprocessable_entity
     end
   end
 

@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    
+      <% if User.find_by(email: @cart.recipient_email) %>
+          <h4>Hello <%= User.find_by(email: @cart.recipient_email).fullname %></h4>
+      <% else %>
+          <h4>Hello <%= @cart.customer_name  %></h4>
+      <% end %>  
+    <p>
+      You have placed an order of: 
+      <ul>
+        <% @items.each do |item|  %>    
+            <li><%= Product.find_by(id: item.product_id).name %> X <%= item.amount%> = AU$ <%= item.total  %></li>
+        <% end %>
+      </ul> 
+      <br>
+    </p>
+    <p>
+      To view more details, please visit: http://localhost:3002/
+    </p>
+    <br>
+    <p>Thanks for the support and have a great day!</p>
+  </body>
+</html>
